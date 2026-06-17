@@ -1,6 +1,7 @@
 import { group, check, sleep } from 'k6';
 import { get, post, put, del } from '../utils/http-client.js';
 import { config } from '../config/config.js';
+import { getAuthToken } from '../utils/auth.js';
 
 export const options = {
     vus: 5,
@@ -13,6 +14,16 @@ export const options = {
 export default function () {
 
     let bookingId = null;
+
+    // AUTHENTICATION
+
+    const token = getAuthToken;
+
+    const authHeaders = {
+        headers: {
+            cookie: `token=${tokrn}`,
+        },
+    };
 
     // CREATE BOOKING
 
@@ -67,7 +78,7 @@ export default function () {
             additionalneeds: 'Dinner'
         };
 
-        const res = put(`/booking/${bookingId}`, payload);
+        const res = put(`/booking/${bookingId}`, payload, authHeaders);
 
         check(res, {
             'Booking updated': (r) => r.status === 200,
@@ -79,7 +90,7 @@ export default function () {
     // DELETE BOOKING
 
     group('Delete booking', () => {
-        const res = (`/booking/${bookingId}`);
+        const res = (`/booking/${bookingId}`, authHeaders);
 
         check(res, {
             'Booking deleted': (r) => r.status === 201 || r.status === 200,

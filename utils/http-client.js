@@ -1,26 +1,32 @@
 import http from 'k6/http';
 import { config } from '../config/config';
 
-export function get(url) {
-    return http.get(`${config.baseUrl}${url}`);
+export function get(url, params = {}) {
+    return http.get(`${config.baseUrl}${url}`, params);
 }
 
-export function post(url, payload){
+export function post(url, payload, params = {}) {
     return http.post(
-       `${config.baseUrl}${url}`,
+        `${config.baseUrl}${url}`,
         JSON.stringify(payload),
-        { headers: config.headers}
+        {
+            headers: config.headers,
+            ...params,
+        }
     );
 }
 
-export function put(url, payload){
-    return http.put(
-       `${config.baseUrl}${url}`,
+export function put(url, payload, params = {}) {
+    return put(
+        `${config.baseUrl}${url}`,
         JSON.stringify(payload),
-        { headers: config.headers}
+        {
+            headers: config.headers,
+            ...params,
+        }
     );
 }
 
-export function del(url) {
-return http.del(`${config.baseUrl}${url}`);
+export function del(url, params = {}) {
+    return http.del(`${config.baseUrl}${url}`, params);
 }
